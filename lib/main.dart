@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'services/networking.dart';
+import 'constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,19 +36,38 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      backgroundColor: backgroundColor,
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              'ABC',
-              style: Theme.of(context).textTheme.headline4,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 16),
+              constraints: const BoxConstraints(maxHeight: double.infinity),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Good afternoon, Emir.',
+                    style: greetingTextStyle,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Last updated: 22/02/2022 16:28:14',
+                    style: lastUpdatedTextStyle,
+                  ),
+                ],
+              ),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(24),
+                    bottomLeft: Radius.circular(24),
+                  ),
+                  color: primaryColor),
             ),
           ],
         ),

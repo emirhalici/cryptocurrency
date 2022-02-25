@@ -5,7 +5,7 @@ class ApiHelper {
   Future<Object> getAllPrices() async {
     var url = Uri.parse('https://api.binance.com/api/v3/ticker/price');
     http.Response response = await http.get(url);
-    print('Response status: ${response.statusCode}');
+    //print('Response status: ${response.statusCode}');
     if (response.statusCode == 200) {
       return response.body;
     } else {
@@ -17,11 +17,11 @@ class ApiHelper {
     var url =
         Uri.parse("https://api.binance.com/api/v3/ticker/price?symbol=$symbol");
     http.Response response = await http.get(url);
-    print('Response status: ${response.statusCode}');
+    //print('Response status: ${response.statusCode}');
     if (response.statusCode == 200) {
       Currency currency = Currency.fromJSON(jsonDecode(response.body));
-      String symbol = currency.symbol;
-      double price = currency.price;
+      //String symbol = currency.symbol;
+      //double price = currency.price;
       return currency;
     } else {
       throw Exception('Failed to fetch data.');

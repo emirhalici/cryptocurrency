@@ -80,39 +80,33 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       color: primaryColor),
                 ),
-                const SizedBox(
-                  height: 30,
+                const ReusableSection(
+                  title: 'Exchange Rates',
+                  cardNumber: 3,
+                  titles: ['American Dollar (USD)', 'Euro (EUR)', 'English Pound (GBP)'],
+                  prices: ['13.86 ₺', '13.86 ₺', '13.86 ₺'],
+                  iconPaths: ['images/usd_icon.svg', 'images/usd_icon.svg', 'images/usd_icon.svg'],
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: Text(
-                    'Exchange Rates',
-                    style: titleTextStyle,
-                  ),
+                const ReusableSection(
+                  title: 'Crypto Currencies',
+                  cardNumber: 2,
+                  titles: ['ABC', 'DFG'],
+                  prices: ['ABC', 'DFG'],
+                  iconPaths: ['images/usd_icon.svg', 'images/usd_icon.svg'],
                 ),
-                const SizedBox(
-                  height: 16,
+                const ReusableSection(
+                  title: 'Stocks',
+                  cardNumber: 2,
+                  titles: ['ABC', 'DFG'],
+                  prices: ['ABC', 'DFG'],
+                  iconPaths: ['images/usd_icon.svg', 'images/usd_icon.svg'],
                 ),
-                const ReusableCard(
-                  title: 'American Dollar (USD)',
-                  price: '13.86 ₺',
-                  iconPath: 'images/usd_icon.svg',
-                  bottomLine: true,
-                  topLine: true,
-                ),
-                const ReusableCard(
-                  title: 'Euro (EUR)',
-                  price: '13.86 ₺',
-                  iconPath: 'images/usd_icon.svg',
-                  bottomLine: true,
-                  topLine: false,
-                ),
-                const ReusableCard(
-                  title: 'English Pound (GBP)',
-                  price: '13.86 ₺',
-                  iconPath: 'images/usd_icon.svg',
-                  bottomLine: true,
-                  topLine: false,
+                const ReusableSection(
+                  title: 'Gold',
+                  cardNumber: 2,
+                  titles: ['ABC', 'DFG'],
+                  prices: ['ABC', 'DFG'],
+                  iconPaths: ['images/usd_icon.svg', 'images/usd_icon.svg'],
                 ),
               ],
             ),

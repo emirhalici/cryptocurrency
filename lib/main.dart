@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Cryptocurrency'),
     );
   }
 }
@@ -35,8 +36,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<void> _pullPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? crypto = prefs.getStringList('cryptoPrices');
+    final List<String>? currency = prefs.getStringList('currencyPrices');
+    final String? last = prefs.getString('lastUpdated');
+    setState(() {
+      if (crypto != null) cryptoPrices = crypto;
+      if (currency != null) currencyPrices = currency;
+      if (last != null) lastUpdated = last;
+    });
+  }
+
   Future<void> _refresh() async {
     var helper = ApiHelper();
+    const int decimalPlace = 2;
     try {
       http.Response prices = await helper.getAllPrices();
       double usd = helper.extractCurrencyFrom(prices, 'BUSDTRY').price;
@@ -45,35 +59,40 @@ class _MyHomePageState extends State<MyHomePage> {
       double btcusd = helper.extractCurrencyFrom(prices, 'BTCUSDT').price;
       double ethusd = helper.extractCurrencyFrom(prices, 'ETHUSDT').price;
       double dogeusd = helper.extractCurrencyFrom(prices, 'DOGEUSDT').price;
-      double btctry = double.parse((btcusd * usd).toStringAsFixed(2));
-      double ethtry = double.parse((ethusd * usd).toStringAsFixed(2));
-      double dogetry = double.parse((dogeusd * usd).toStringAsFixed(2));
-      usd = double.parse((usd).toStringAsFixed(2));
-      eur = double.parse((eur).toStringAsFixed(2));
-      gbp = double.parse((gbp).toStringAsFixed(2));
+      double btctry = double.parse((btcusd * usd).toStringAsFixed(decimalPlace));
+      double ethtry = double.parse((ethusd * usd).toStringAsFixed(decimalPlace));
+      double dogetry = double.parse((dogeusd * usd).toStringAsFixed(decimalPlace));
+      usd = double.parse((usd).toStringAsFixed(decimalPlace));
+      eur = double.parse((eur).toStringAsFixed(decimalPlace));
+      gbp = double.parse((gbp).toStringAsFixed(decimalPlace));
       const String pattern = 'dd/MM/yyyy kk:mm:ss';
       setState(() {
         currencyPrices[0] = '$usd ₺';
         currencyPrices[1] = '$eur ₺';
         currencyPrices[2] = '$gbp ₺';
-        cryptoPrices[0] = '$btcusd \$';
-        cryptoPrices[1] = '$ethusd \$';
-        cryptoPrices[2] = '$dogeusd \$';
+        cryptoPrices[0] = '$btcusd \$\n$btctry ₺';
+        cryptoPrices[1] = '$ethusd \$\n$ethtry ₺';
+        cryptoPrices[2] = '$dogeusd \$\n$dogetry ₺';
         final String dateTime = DateFormat(pattern).format(DateTime.now());
         lastUpdated = 'Last updated: $dateTime';
       });
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('lastUpdated', lastUpdated);
+      prefs.setStringList('currencyPrices', currencyPrices);
+      prefs.setStringList('cryptoPrices', cryptoPrices);
     } catch (e) {
       Fluttertoast.showToast(msg: 'Failed to fetch data.');
     }
   }
 
-  List<String> currencyPrices = ['13.86 ₺', '4.86 ₺', '7.86 ₺'];
-  List<String> cryptoPrices = ['38936.86 \$', '2734.71 \$', '2734.71 \$'];
-  String lastUpdated = 'Last updated: 22/02/2022 16:28:14';
+  List<String> currencyPrices = ['?', '?', '?'];
+  List<String> cryptoPrices = ['?', '?', '?'];
+  String lastUpdated = '';
 
   @override
   void initState() {
     super.initState();
+    _pullPreferences();
     DateTime timenow = DateTime.now();
     print(timenow);
     Timer timer = Timer.periodic(const Duration(seconds: 10), (timer) {
@@ -141,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ReusableSection(
                     title: 'Crypto Currencies',
                     cardNumber: 3,
-                    titles: const ['Bitcoin (BTC)', 'Bitcoin (BTC)', 'Dogecoin (DOGE)'],
+                    titles: const ['Bitcoin (BTC)', 'Ethereum (ETH)', 'Dogecoin (DOGE)'],
                     prices: cryptoPrices,
                     iconPaths: const ['images/usd_icon.svg', 'images/usd_icon.svg', 'images/usd_icon.svg'],
                   ),
@@ -165,14 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ApiHelper apiHelper = ApiHelper();
-          apiHelper.getPriceBySymbol('BUSDTRY');
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

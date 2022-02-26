@@ -84,6 +84,7 @@ class ReusableCard extends StatelessWidget {
               Flexible(
                 child: Text(
                   price,
+                  textAlign: TextAlign.end,
                   style: priceTextStyle,
                 ),
               )

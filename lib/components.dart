@@ -10,7 +10,8 @@ class ReusableSection extends StatelessWidget {
   final List<String> iconPaths;
 
   const ReusableSection(
-      {required this.title, required this.cardNumber, required this.titles, required this.prices, required this.iconPaths});
+      {Key? key, required this.title, required this.cardNumber, required this.titles, required this.prices, required this.iconPaths})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +81,11 @@ class ReusableCard extends StatelessWidget {
               const SizedBox(
                 width: 12,
               ),
-              Text(
-                price,
-                style: priceTextStyle,
+              Flexible(
+                child: Text(
+                  price,
+                  style: priceTextStyle,
+                ),
               )
             ],
           ),
